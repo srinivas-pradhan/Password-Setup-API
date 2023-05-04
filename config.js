@@ -7,5 +7,7 @@ const COGNITO_USER_POOL = process.env.COGNITO_USER_POOL
 
 module.exports = {
     PORT,
-    MONGO_URI
+    MONGO_URI,
+    COGNITO_APP_CLIENT,
+    COGNITO_USER_POOL
 }

@@ -1,0 +1,25 @@
+{
+  "name": "password-setup-api",
+  "version": "1.0.0",
+  "description": "This API takes password and stores a hash in MongoDB and uploads the secret to AWS Secrets Manager",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srinivas-pradhan/Password-Setup-API.git"
+  },
+  "author": "srinivaspradhan@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srinivas-pradhan/Password-Setup-API/issues"
+  },
+  "homepage": "https://github.com/srinivas-pradhan/Password-Setup-API#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

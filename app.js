@@ -3,10 +3,13 @@ const app = express()
 const MongoDB = require('./db/mongo')
 const {PORT, MONGO_URI } = require('./config')
 require('dotenv').config()
-
+const accountRouter = require('./routes/accounts');
+const secretsRouter = require('./routes/secrets');
 app.use(express.json())
 
-
+// routes
+app.use('/api/v1/accounts', accountRouter);
+app.use('/api/v1/secrets', secretsRouter);
 
 const start = async () => {
     try {

@@ -1,4 +1,5 @@
 const express = require('express')
+const morgan = require("morgan");
 const app = express()
 const MongoDB = require('./db/mongo')
 const {PORT, MONGO_URI } = require('./config')
@@ -8,6 +9,8 @@ const secretsRouter = require('./routes/secrets')
 const AuthRouter = require('./routes/auth')
 
 app.use(express.json())
+app.use(morgan('tiny'))
+
 
 // routes
 app.use('/api/v1/accounts', accountRouter)
@@ -18,7 +21,7 @@ const start = async () => {
     try {
         await MongoDB(MONGO_URI)
         app.listen(PORT, () => 
-                console.log(`Server is listening on ${PORT} `)
+                console.log(`Server is listening on ${PORT}...`)
             )   
     } catch (error) {
         console.log(error)

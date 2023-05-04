@@ -13,7 +13,7 @@ const secretsRouter = require('./routes/secrets')
 const AuthRouter = require('./routes/auth')
 
 app.use(express.json())
-app.use(morgan('short'))
+app.use(morgan('tiny'))
 
 
 // routes

@@ -2,8 +2,9 @@ const express = require('express')
 const morgan = require("morgan");
 const app = express()
 const MongoDB = require('./db/mongo')
-const {PORT,
-     MONGO_URI,
+const {
+    PORT,
+    MONGO_URI,
     COGNITO_APP_CLIENT,
     COGNITO_USER_POOL
 } = require('./config')

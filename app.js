@@ -3,7 +3,6 @@ const morgan = require("morgan");
 const app = express()
 const MongoDB = require('./db/mongo')
 const {PORT, MONGO_URI } = require('./config')
-require('dotenv').config()
 const accountRouter = require('./routes/accounts')
 const secretsRouter = require('./routes/secrets')
 const AuthRouter = require('./routes/auth')

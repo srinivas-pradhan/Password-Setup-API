@@ -11,12 +11,13 @@
     "url": "git+https://github.com/srinivas-pradhan/Password-Setup-API.git"
   },
   "author": "srinivaspradhan@gmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/srinivas-pradhan/Password-Setup-API/issues"
   },
   "homepage": "https://github.com/srinivas-pradhan/Password-Setup-API#readme",
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.326.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^7.1.0"

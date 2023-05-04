@@ -3,6 +3,16 @@
 
 ## App Setup 
 
+### Node Version
+```
+node --version
+v19.6.1
+```
+### NPM Version
+```
+npm --version
+9.4.0
+```
 ### Install App Dependencies
 ```
 npm install

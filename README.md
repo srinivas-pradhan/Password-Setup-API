@@ -1,5 +1,6 @@
 # Password-Setup-API
- This API takes password and stores a hash in MongoDB and uploads the secret to AWS Secrets Manager
+This API takes password and stores metadata in MongoDB and uploads the secret to AWS Secrets Manager
+
 
 ## App Setup 
 

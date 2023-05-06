@@ -1,5 +1,5 @@
 const express = require('express')
-const morgan = require("morgan");
+const morgan = require('morgan');
 const app = express()
 const MongoDB = require('./db/mongo')
 const {

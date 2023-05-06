@@ -18,6 +18,7 @@
   "homepage": "https://github.com/srinivas-pradhan/Password-Setup-API#readme",
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.326.0",
+    "aws-jwt-verify": "^4.0.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "http-status-codes": "^2.2.0",

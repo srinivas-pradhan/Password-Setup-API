@@ -32,4 +32,3 @@ PORT=[App PORT]
 COGNITO_APP_CLIENT=[Cognito App Client Key]
 COGNITO_USER_POOL=[Cognito User Pool ID]
 ```
-

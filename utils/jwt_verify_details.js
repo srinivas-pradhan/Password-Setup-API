@@ -1,7 +1,7 @@
 const CognitoJwtVerifier = require('aws-jwt-verify')
 const config = require('./config')
 
-const jwt_verify_details = async (token, next) => {
+const jwt_verify_details = async (token) => {
     const verifier = CognitoJwtVerifier.create({
         userPoolId: config.COGNITO_USER_POOL,
         tokenUse: token,
@@ -11,7 +11,6 @@ const jwt_verify_details = async (token, next) => {
         const payload = await verifier.verify(token)
         console.log('Token is valid. Payload:', payload)
         return payload
-        next()
     } 
     catch (error) {
         console.log(error)

@@ -1,18 +1,16 @@
 const { CognitoIdentityProviderClient, AdminInitiateAuthCommand, AuthFlowType } = require("@aws-sdk/client-cognito-identity-provider")
 const client = new CognitoIdentityProviderClient();
-const config = require('./config')
 
-const admin_initiate_auth = async (username, password, next) => {
+const admin_initiate_auth = async (username, password, app_client, user_pool) => {
     const command = new AdminInitiateAuthCommand({
-        ClientId: config.COGNITO_APP_CLIENT,
-        UserPoolId: config.COGNITO_USER_POOL,
+        ClientId: app_client,
+        UserPoolId: user_pool,
         AuthFlow: AuthFlowType.ADMIN_USER_PASSWORD_AUTH,
         AuthParameters: { USERNAME: username, PASSWORD: password },
     })
     try {
-        response = await client.send(command);
+        response = await client.send(command)
         return response
-        next()
     } catch (error) {
         console.log(error)
     }

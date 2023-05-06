@@ -13,8 +13,8 @@ const jwt_verify_details = async (token, next) => {
         return payload
         next()
     } 
-    catch {
-        console.log('Token not valid!')
+    catch (error) {
+        console.log(error)
     }
 }
 module.exports = jwt_verify_details

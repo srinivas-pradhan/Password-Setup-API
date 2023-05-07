@@ -9,7 +9,9 @@ const {
     GetOneAccount
 } = require('../controllers/accounts')
 
-router.route('/').post(SetupAccount).get(GetAllAccounts)
+const JwtVerify = require('../middleware/verifyToken')
+
+router.route('/').post(JwtVerify, SetupAccount).get(GetAllAccounts)
 
 router
   .route('/:id')

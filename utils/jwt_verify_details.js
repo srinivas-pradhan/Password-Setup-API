@@ -1,5 +1,5 @@
 const CognitoJwtVerifier = require('aws-jwt-verify')
-const config = require('./config')
+const config = require('../config')
 
 const jwt_verify_details = async (token) => {
     const verifier = CognitoJwtVerifier.create({

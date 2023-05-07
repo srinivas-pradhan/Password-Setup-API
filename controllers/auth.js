@@ -1,25 +1,36 @@
 const { StatusCodes } = require('http-status-codes')
+
 const UserAuth = require('../utils/cognito_initate_auth')
 const config = require('../config')
 
 const login  = ( req, res ) => {
-    const { email, password } = req.body
-    if (!email || !password) {
-        res.status(StatusCodes.BAD_REQUEST)('Please provide email and password') // Fix this
+    const { username, password } = req.body
+    if (!username || !password) {
+        res.status(StatusCodes.EXPECTATION_FAILED).json({'msg':'Please provide username and password'})
+        return;
     }
-    auth = UserAuth(email, 
+    auth = UserAuth(username, 
         password, 
         config.COGNITO_APP_CLIENT, 
         config.COGNITO_USER_POOL
+    ).then(
+        (result) => {
+            res.status(StatusCodes.OK).json(result.AuthenticationResult)
+        }
+    ).catch(
+        (err) => {
+            res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Credentials'})
+        }
     )
-    res.status(StatusCodes.OK).json({ auth }) // Add checks around Cognito Auth
-    // res.status(StatusCodes.OK).json({ 
-    //     'access_token' : auth['AuthenticationResult']['AccessToken'],
-    //     'token_type' : auth['AuthenticationResult']['TokenType'],
-    //     'expires_in' : auth['AuthenticationResult']['ExpiresIn'],
-    //     'refresh_token' : auth['AuthenticationResult']['RefreshToken'],
-    //     'token_id' : auth['AuthenticationResult']['IdToken']
-    // });
+    
+    
+    // .then(
+    //     function (result) {
+    //         res.status(StatusCodes.OK).json(result.AuthenticationResult)
+    //     }
+    // ) 
+
+
 }
 
 module.exports = {

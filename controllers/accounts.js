@@ -7,7 +7,7 @@ const SetupAccount  = async ( req, res ) => {
             const Acc = await AccountStore.create(req.body)
             res.status(StatusCodes.CREATED).json(Acc)
         } catch (error) {
-            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+            res.status(StatusCodes.BAD_REQUEST).json({ error: "REQUEST_PARAMS_ERROR", message: error.message })
         }
     } else {
         res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Bearer Token'})

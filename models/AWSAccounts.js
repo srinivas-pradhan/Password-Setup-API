@@ -5,6 +5,7 @@ const AWSAccountSchema = new mongoose.Schema(
         AccountNumber: {
             type: Number,
             required: [true, 'AWS Account Number must be provided.'],
+            unique: true
         },
         AccountType: {
             type: String,

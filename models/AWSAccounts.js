@@ -15,7 +15,7 @@ const AWSAccountSchema = new mongoose.Schema(
         DefaultRegion: {
             type: String,
             enum: ['us-east-1', 'us-east-2', 'us-west-1'],
-            default: 'us-east-1',
+            default: 'us-east-1'
         }
 })
 

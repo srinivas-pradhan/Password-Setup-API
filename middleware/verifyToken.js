@@ -7,14 +7,18 @@ const TokenValidity = ( req, res, next ) => {
         req.headers.authorization.split(' ')[1]
     ).then(
         (result) => {
-            console.log(result)
-            //res.status(StatusCodes.OK).json(result)
+            if (!result){
+                res.locals.authenticated = false
+            } 
+            else {
+                res.locals.authenticated = true
+                res.locals.uname = result.Username
+            }
             next()
         }
     ).catch(
         (err) => {
-            res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Credentials'})
-            next(err)
+            throw new Error('Exception message')
         }
     )
 }

@@ -8,8 +8,8 @@ const AWSAccountSchema = new mongoose.Schema(
         },
         AccountType: {
             type: String,
-            enum: ['default', 'prod', 'stg'],
-            default: 'default',
+            enum: ['prod', 'stg'],
+            default: 'prod',
         },
         DefaultRegion: {
             type: String,

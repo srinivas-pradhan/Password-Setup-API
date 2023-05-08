@@ -1,10 +1,14 @@
 const { StatusCodes } = require('http-status-codes')
+const AccountStore = require('../models/AWSAccounts')
 
-
-const SetupAccount  = ( req, res ) => {
+const SetupAccount  = async ( req, res ) => {
     if (res.locals.authenticated) {
-        console.log(res.locals.uname)
-        res.status(StatusCodes.CREATED).json({ msg: req.body })
+        try {
+            const Acc = await AccountStore.create(req.body)
+            res.status(StatusCodes.CREATED).json(Acc)
+        } catch (error) {
+            res.status(StatusCodes.BAD_REQUEST).json({ msg: error.name })
+        }
     } else {
         res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Bearer Token'})
     }

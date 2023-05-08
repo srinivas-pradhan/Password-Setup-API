@@ -22,6 +22,7 @@ const login  = ( req, res ) => {
             res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Credentials'})
         }
     )
+
 }
 
 module.exports = {

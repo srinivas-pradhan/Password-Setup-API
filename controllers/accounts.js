@@ -7,10 +7,24 @@ const SetupAccount  = async ( req, res ) => {
             const Acc = await AccountStore.create(req.body)
             res.status(StatusCodes.CREATED).json(Acc)
         } catch (error) {
-            res.status(StatusCodes.BAD_REQUEST).json({ error: "REQUEST_PARAMS_ERROR", message: error.message })
+            if (error.name === "MongoError") {
+                res.status(StatusCodes.BAD_REQUEST).json(
+                    { error: "DuplicateKeyError", 
+                    message: `Account Number ${req.body.AccountNumber} already exists.` 
+                })
+            }
+            else if (error.name === "ValidationError") {
+                res.status(StatusCodes.BAD_REQUEST).json(
+                    { error: "InputParamsError", 
+                    message: `Required Paramters : "AccountNumber" is not defined.` 
+                })
+            }
+            else {
+                res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+            }
         }
     } else {
-        res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Bearer Token'})
+        res.status(StatusCodes.UNAUTHORIZED).json({'error': 'Invalid Bearer Token'})
     }
 }
 

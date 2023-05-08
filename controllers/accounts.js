@@ -2,7 +2,12 @@ const { StatusCodes } = require('http-status-codes')
 
 
 const SetupAccount  = ( req, res ) => {
-    res.status(StatusCodes.CREATED).json({ msg: req.body });
+    if (res.locals.authenticated) {
+        console.log(res.locals.uname)
+        res.status(StatusCodes.CREATED).json({ msg: req.body })
+    } else {
+        res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Bearer Token'})
+    }
 }
 
 const UpdateAccount  = ( req, res ) => {

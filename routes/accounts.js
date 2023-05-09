@@ -6,7 +6,7 @@ const {
     UpdateAccount,
     DeleteAccount,
     GetAllAccounts,
-    GetOneAccountByNumber
+    GetOneAccountByNumber,
 } = require('../controllers/accounts')
 
 const JwtVerify = require('../middleware/verifyToken')

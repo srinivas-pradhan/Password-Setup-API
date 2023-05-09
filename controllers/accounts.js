@@ -70,7 +70,6 @@ const GetOneAccountByNumber  = async ( req, res ) => {
         res.status(StatusCodes.UNAUTHORIZED).json({'error': 'Invalid Bearer Token'})
     }
 }
-
 module.exports = {
     SetupAccount,
     UpdateAccount,

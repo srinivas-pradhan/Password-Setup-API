@@ -36,8 +36,14 @@ const DeleteAccount  = ( req, res ) => {
     res.status(StatusCodes.OK).json({ msg: req.body });
 }
 
-const GetAllAccounts  = ( req, res ) => {
-    res.status(StatusCodes.OK).json({ msg: req.body });
+const GetAllAccounts  = async ( req, res ) => {
+    console.log(res.locals.authenticated)
+    if (res.locals.authenticated) {
+        const Acc = await AccountStore.find({})
+        res.status(StatusCodes.OK).json(Acc)
+    } else {
+        res.status(StatusCodes.UNAUTHORIZED).json({'error': 'Invalid Bearer Token'})
+    }
 }
 
 const GetOneAccount  = ( req, res ) => {

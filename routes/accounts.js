@@ -11,7 +11,7 @@ const {
 
 const JwtVerify = require('../middleware/verifyToken')
 
-router.route('/').post(JwtVerify, SetupAccount).get(GetAllAccounts)
+router.route('/').post(JwtVerify, SetupAccount).get(JwtVerify, GetAllAccounts)
 
 router
   .route('/:id')

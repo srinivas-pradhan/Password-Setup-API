@@ -37,7 +37,6 @@ const DeleteAccount  = ( req, res ) => {
 }
 
 const GetAllAccounts  = async ( req, res ) => {
-    console.log(res.locals.authenticated)
     if (res.locals.authenticated) {
         const Acc = await AccountStore.find({})
         res.status(StatusCodes.OK).json(Acc)

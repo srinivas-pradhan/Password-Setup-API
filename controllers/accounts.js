@@ -45,8 +45,30 @@ const GetAllAccounts  = async ( req, res ) => {
     }
 }
 
-const GetOneAccount  = ( req, res ) => {
-    res.status(StatusCodes.OK).json({ msg: req.body });
+const GetOneAccountByNumber  = async ( req, res ) => {
+    if (res.locals.authenticated) {
+        try {
+            const { id: AccountID } = req.params
+            const Acc = await AccountStore.findOne({ AccountNumber: AccountID })
+            if(Acc) {
+                res.status(StatusCodes.OK).json(Acc)
+            } else {
+                res.status(StatusCodes.OK).json({})
+            }
+        } catch (error) {
+            if (error.name === "CastError") {
+                res.status(StatusCodes.BAD_REQUEST).json(
+                    { error: "CastError", 
+                    message: `Expected Path Parameter Value - AWS Account Number` 
+                })
+            }
+            else {
+                res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+            }
+        }   
+    } else {
+        res.status(StatusCodes.UNAUTHORIZED).json({'error': 'Invalid Bearer Token'})
+    }
 }
 
 module.exports = {
@@ -54,5 +76,5 @@ module.exports = {
     UpdateAccount,
     DeleteAccount,
     GetAllAccounts,
-    GetOneAccount
+    GetOneAccountByNumber
 }

@@ -6,7 +6,7 @@ const config = require('../config')
 const login  = ( req, res ) => {
     const { username, password } = req.body
     if (!username || !password) {
-        res.status(StatusCodes.EXPECTATION_FAILED).json({'msg':'Please provide username and password'})
+        res.status(StatusCodes.EXPECTATION_FAILED).json({'error':'Please provide username and password'})
         return;
     }
     auth = UserAuth(username, 
@@ -19,7 +19,7 @@ const login  = ( req, res ) => {
         }
     ).catch(
         (err) => {
-            res.status(StatusCodes.UNAUTHORIZED).json({'msg': 'Invalid Credentials'})
+            res.status(StatusCodes.UNAUTHORIZED).json({'error': 'Invalid Credentials'})
         }
     )
 

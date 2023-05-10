@@ -17,6 +17,6 @@ router
   .route('/:id')
   .get(JwtVerify, GetOneAccountByNumber)
   .delete(DeleteAccount)
-  .patch(UpdateAccount)
+  .patch(JwtVerify, UpdateAccount)
 
 module.exports = router

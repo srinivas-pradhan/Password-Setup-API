@@ -5,7 +5,11 @@ const SetupAccount  = async ( req, res ) => {
     if (res.locals.authenticated) {
         try {
             const Acc = await AccountStore.create(req.body)
-            res.status(StatusCodes.CREATED).json(Acc)
+            res.status(StatusCodes.CREATED).json({
+                "AccountType": Acc.AccountType,
+                "DefaultRegion": Acc.DefaultRegion,
+                "AccountNumber": Acc.AccountNumber
+            })
         } catch (error) {
             if (error.name === "MongoError") {
                 res.status(StatusCodes.BAD_REQUEST).json(
@@ -16,7 +20,7 @@ const SetupAccount  = async ( req, res ) => {
             else if (error.name === "ValidationError") {
                 res.status(StatusCodes.BAD_REQUEST).json(
                     { error: "InputParamsError", 
-                    message: `Required Paramters : "AccountNumber" is not defined.` 
+                    message: `Required Paramters : "AccountNumber" is not defined and/or is not defined correctly.` 
                 })
             }
             else {
@@ -71,7 +75,16 @@ const DeleteAccount  = ( req, res ) => {
 const GetAllAccounts  = async ( req, res ) => {
     if (res.locals.authenticated) {
         const Acc = await AccountStore.find({})
-        res.status(StatusCodes.OK).json(Acc)
+        const result = []
+        for (let i=0; i < Acc.length; i++){
+            result.push({
+                "AccountType": Acc[i].AccountType,
+                "DefaultRegion": Acc[i].DefaultRegion,
+                "AccountNumber": Acc[i].AccountNumber
+            })
+        }
+        res.status(StatusCodes.OK).json(result)
+
     } else {
         res.status(StatusCodes.UNAUTHORIZED).json({'error': 'Invalid Bearer Token'})
     }

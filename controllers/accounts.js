@@ -75,7 +75,7 @@ const DeleteAccount  = ( req, res ) => {
 const GetAllAccounts  = async ( req, res ) => {
     if (res.locals.authenticated) {
         const Acc = await AccountStore.find({})
-        const result = []
+        var result = []
         for (let i=0; i < Acc.length; i++){
             result.push({
                 "AccountType": Acc[i].AccountType,

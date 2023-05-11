@@ -3,6 +3,9 @@ const { StatusCodes } = require('http-status-codes')
 
 
 const TokenValidity = ( req, res, next ) => {
+    if (!req.headers.authorization) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ error: 'Please pass the Bearer Token in Headers' });
+    }
     const payload = ValidateToken(
         req.headers.authorization.split(' ')[1]
     ).then(
@@ -18,7 +21,7 @@ const TokenValidity = ( req, res, next ) => {
         }
     ).catch(
         (err) => {
-            throw new Error('Exception message')
+            next(err)
         }
     )
 }

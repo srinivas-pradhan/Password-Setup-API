@@ -8,7 +8,8 @@ const SetupAccount  = async ( req, res ) => {
             res.status(StatusCodes.CREATED).json({
                 "AccountType": Acc.AccountType,
                 "SupportedRegions": Acc.SupportedRegions,
-                "AccountNumber": Acc.AccountNumber
+                "AccountNumber": Acc.AccountNumber,
+                "KMSKey": Acc.KMSKey
             })
         } catch (error) {
             if (error.name === "MongoError") {
@@ -36,15 +37,18 @@ const UpdateAccount  = async ( req, res ) => {
     if (res.locals.authenticated) {
         try {
             const { id: AccountID } = req.params
-            const Acc = await AccountStore.findOneAndUpdate({ AccountNumber: AccountID }, req.body, {
+            const Acc = await AccountStore.findOneAndUpdate({ AccountNumber: AccountID }, {
+                "$push": req.body // Need to add logic to validate if the item exists in array already
+            }, {    
                 new: true,
-                runValidators: true,
-              })
+                runValidators: true              
+            })
             if (Acc) {
                 res.status(StatusCodes.OK).json({
                     "AccountType": Acc.AccountType,
                     "SupportedRegions": Acc.SupportedRegions,
-                    "AccountNumber": Acc.AccountNumber
+                    "AccountNumber": Acc.AccountNumber,
+                    "KMSKey": Acc.KMSKey
                 }) 
             }
             else {
@@ -104,8 +108,9 @@ const GetAllAccounts  = async ( req, res ) => {
         for (let i=0; i < Acc.length; i++){
             result.push({
                 "AccountType": Acc[i].AccountType,
-                "SupportedRegions": Acc.SupportedRegions,
-                "AccountNumber": Acc[i].AccountNumber
+                "SupportedRegions": Acc[i].SupportedRegions,
+                "AccountNumber": Acc[i].AccountNumber,
+                "KMSKey": Acc[i].KMSKey
             })
         }
         res.status(StatusCodes.OK).json(result)
@@ -124,7 +129,8 @@ const GetOneAccountByNumber  = async ( req, res ) => {
                 res.status(StatusCodes.OK).json({
                     "AccountType": Acc.AccountType,
                     "SupportedRegions": Acc.SupportedRegions,
-                    "AccountNumber": Acc.AccountNumber
+                    "AccountNumber": Acc.AccountNumber,
+                    "KMSKey": Acc.KMSKey
                 })
             } else {
                 res.status(StatusCodes.NO_CONTENT).send()

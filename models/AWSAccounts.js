@@ -1,5 +1,15 @@
 const mongoose = require('mongoose')
 
+const RegionSchema = new mongoose.Schema(
+    {
+        Regions: {
+            type: String,
+            enum: ['us-east-1', 'us-east-2', 'us-west-1'],
+            default: 'us-east-1'
+        }
+    }
+)
+
 const AWSAccountSchema = new mongoose.Schema(
     {
         AccountNumber: {
@@ -18,11 +28,11 @@ const AWSAccountSchema = new mongoose.Schema(
             default: 'default',
             index: true
         },
-        DefaultRegion: {
-            type: String,
-            enum: ['us-east-1', 'us-east-2', 'us-west-1'],
-            default: 'us-east-1'
+        SupportedRegions: {
+            Array: [RegionSchema]
         }
 })
+
+AWSAccountSchema.index({ AccountNumber: 1, AccountType: 1 }, { unique: true });
 
 module.exports = mongoose.model('AccountStore', AWSAccountSchema)

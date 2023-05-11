@@ -7,7 +7,7 @@ const SetupAccount  = async ( req, res ) => {
             const Acc = await AccountStore.create(req.body)
             res.status(StatusCodes.CREATED).json({
                 "AccountType": Acc.AccountType,
-                "DefaultRegion": Acc.DefaultRegion,
+                "SupportedRegions": Acc.SupportedRegions,
                 "AccountNumber": Acc.AccountNumber
             })
         } catch (error) {
@@ -43,7 +43,7 @@ const UpdateAccount  = async ( req, res ) => {
             if (Acc) {
                 res.status(StatusCodes.OK).json({
                     "AccountType": Acc.AccountType,
-                    "DefaultRegion": Acc.DefaultRegion,
+                    "SupportedRegions": Acc.SupportedRegions,
                     "AccountNumber": Acc.AccountNumber
                 }) 
             }
@@ -105,7 +105,7 @@ const GetAllAccounts  = async ( req, res ) => {
         for (let i=0; i < Acc.length; i++){
             result.push({
                 "AccountType": Acc[i].AccountType,
-                "DefaultRegion": Acc[i].DefaultRegion,
+                "SupportedRegions": Acc.SupportedRegions,
                 "AccountNumber": Acc[i].AccountNumber
             })
         }
@@ -124,7 +124,7 @@ const GetOneAccountByNumber  = async ( req, res ) => {
             if(Acc) {
                 res.status(StatusCodes.OK).json({
                     "AccountType": Acc.AccountType,
-                    "DefaultRegion": Acc.DefaultRegion,
+                    "SupportedRegions": Acc.SupportedRegions,
                     "AccountNumber": Acc.AccountNumber
                 })
             } else {

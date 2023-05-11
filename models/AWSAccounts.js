@@ -22,6 +22,11 @@ const AWSAccountSchema = new mongoose.Schema(
             enum: ['us-east-1', 'us-east-2', 'us-west-1'],
             required: [true, 'AWS SupportedRegions must be provided']
 
+        },
+        KMSKey: {
+            type: String,
+            default: "NO_KMS_KEY"
+
         }
 })
 

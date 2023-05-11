@@ -7,8 +7,10 @@ const AWSAccountSchema = new mongoose.Schema(
             required: [true, 'AWS Account Number must be provided.'],
             unique: true,
             index: true,
-            max: 12,
-            min: 12
+            validate: {
+                validator: function(v) {
+                  return /^([0-9]{12}$)/.test(v);
+            }},
         },
         AccountType: {
             type: String,

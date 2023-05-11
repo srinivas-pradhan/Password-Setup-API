@@ -68,8 +68,34 @@ const UpdateAccount  = async ( req, res ) => {
     }
 }
 
-const DeleteAccount  = ( req, res ) => {
-    res.status(StatusCodes.OK).json({ msg: req.body });
+const DeleteAccount  = async ( req, res ) => {
+    if (res.locals.authenticated) {
+        try {
+            const { id: AccountID } = req.params
+            const Acc = await AccountStore.findOneAndDelete({ AccountNumber: AccountID }) 
+            if (!Acc) {
+                res.status(StatusCodes.NOT_FOUND).json({"error": `Account ID ${AccountID} not setup yet.`})
+            }
+            else {
+                res.status(StatusCodes.NO_CONTENT).send()
+            }
+        }
+        catch (error) {
+            if (error.name === "CastError") {
+                res.status(StatusCodes.BAD_REQUEST).json(
+                    { error: "CastError", 
+                    message: `Expected Path Parameter Value - AWS Account Number` 
+                })
+            }
+            else {
+                res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+            }
+        }
+    }
+    else {
+        res.status(StatusCodes.UNAUTHORIZED).json({'error': 'Invalid Bearer Token'})
+    }
+    //res.status(StatusCodes.OK).json({ msg: req.body });
 }
 
 const GetAllAccounts  = async ( req, res ) => {

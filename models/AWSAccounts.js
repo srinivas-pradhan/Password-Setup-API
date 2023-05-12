@@ -30,6 +30,4 @@ const AWSAccountSchema = new mongoose.Schema(
         }
 })
 
-AWSAccountSchema.index({ AccountNumber: 1, AccountType: 1 }, { unique: true });
-
 module.exports = mongoose.model('AccountStore', AWSAccountSchema)

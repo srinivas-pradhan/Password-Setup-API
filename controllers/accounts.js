@@ -37,9 +37,17 @@ const UpdateAccount  = async ( req, res ) => {
     if (res.locals.authenticated) {
         try {
             const { id: AccountID } = req.params
-            const Acc = await AccountStore.findOneAndUpdate({ AccountNumber: AccountID }, {
-                "$push": req.body // Need to add logic to validate if the item exists in array already
-            }, {    
+            if (req.body.SupportedRegions){
+                const FindAcc = await AccountStore.findOne({ AccountNumber: AccountID })
+                if (FindAcc.SupportedRegions.includes(req.body.SupportedRegions)) {
+                    req.body.SupportedRegions = FindAcc.SupportedRegions
+                }
+                else{
+                    FindAcc.SupportedRegions.push(req.body.SupportedRegions)
+                    req.body.SupportedRegions = FindAcc.SupportedRegions
+                }
+            }
+            const Acc = await AccountStore.findOneAndUpdate({ AccountNumber: AccountID }, req.body, {    
                 new: true,
                 runValidators: true              
             })

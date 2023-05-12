@@ -39,13 +39,8 @@ const UpdateAccount  = async ( req, res ) => {
             const { id: AccountID } = req.params
             if (req.body.SupportedRegions){
                 const FindAcc = await AccountStore.findOne({ AccountNumber: AccountID })
-                if (FindAcc.SupportedRegions.includes(req.body.SupportedRegions)) {
-                    req.body.SupportedRegions = FindAcc.SupportedRegions
-                }
-                else{
-                    regions = FindAcc.SupportedRegions.concat(req.body.SupportedRegions)
-                    req.body.SupportedRegions = regions
-                }
+                let regions = [...new Set([...FindAcc.SupportedRegions, ...req.body.SupportedRegions])]
+                req.body.SupportedRegions = regions
             }
             const Acc = await AccountStore.findOneAndUpdate({ AccountNumber: AccountID }, req.body, {    
                 new: true,

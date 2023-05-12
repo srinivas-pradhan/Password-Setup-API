@@ -8,9 +8,11 @@ const {
     MONGO_URI,
     COGNITO_APP_CLIENT,
     COGNITO_USER_POOL,
-    LOG_LEVEL
+    LOG_LEVEL,
+    AUTHORIZED_ADMINS
 } = require('./config')
 const accountRouter = require('./routes/accounts')
+const kmsRouter = require('./routes/kms')
 const secretsRouter = require('./routes/secrets')
 const AuthRouter = require('./routes/auth')
 
@@ -20,6 +22,7 @@ app.use(morgan(LOG_LEVEL))
 
 // routes
 app.use('/api/v1/accounts', accountRouter)
+app.use('/api/v1/kms', kmsRouter)
 app.use('/api/v1/secrets', secretsRouter)
 app.use('/api/v1/auth', AuthRouter)
 

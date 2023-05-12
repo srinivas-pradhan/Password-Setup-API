@@ -44,8 +44,6 @@ const UpdateAccount  = async ( req, res ) => {
                 }
                 else{
                     regions = FindAcc.SupportedRegions.concat(req.body.SupportedRegions)
-                    console.log(regions)
-                    //FindAcc.SupportedRegions.push(req.body.SupportedRegions)
                     req.body.SupportedRegions = regions
                 }
             }

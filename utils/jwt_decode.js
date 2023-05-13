@@ -1,7 +1,10 @@
 const  jwt_decode = require("jwt-decode")
  
-var token = "";
-var decoded = jwt_decode(token);
+
+const decode = async (token) => {
+    decoded = jwt_decode(token)
+    return response
+}
 
 //console.log(decoded['cognito:groups'])
 

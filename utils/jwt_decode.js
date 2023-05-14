@@ -6,7 +6,7 @@ const decode = async (token) => {
         const decoded = jwt_decode(token)
         return decoded['cognito:groups']
     } catch (error) {
-        return error.name
+        return null
     }
 }
 

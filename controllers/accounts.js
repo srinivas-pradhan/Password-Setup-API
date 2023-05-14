@@ -2,7 +2,7 @@ const { StatusCodes } = require('http-status-codes')
 const AccountStore = require('../models/AWSAccounts')
 
 const SetupAccount  = async ( req, res ) => {
-    if (res.locals.authenticated) {
+    if (res.locals.authenticated && res.locals.authorized) {
         try {
             const Acc = await AccountStore.create(req.body)
             res.status(StatusCodes.CREATED).json({

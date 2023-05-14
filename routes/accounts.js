@@ -10,8 +10,9 @@ const {
 } = require('../controllers/accounts')
 
 const JwtVerify = require('../middleware/verifyToken')
+const JwtAuthorize = require('../middleware/verifyAuthorization')
 
-router.route('/').post(JwtVerify, SetupAccount).get(JwtVerify, GetAllAccounts)
+router.route('/').post(JwtVerify, JwtAuthorize, SetupAccount).get(JwtVerify, GetAllAccounts)
 
 router
   .route('/:id')

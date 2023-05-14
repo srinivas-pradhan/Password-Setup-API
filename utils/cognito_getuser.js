@@ -10,7 +10,7 @@ const get_user = async (token) => {
         response = await client.send(command);
         return response
     } catch (error) {
-        return error.name
+        return null
     }
 }
 

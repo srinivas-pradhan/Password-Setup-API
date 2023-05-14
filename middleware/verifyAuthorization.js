@@ -7,11 +7,11 @@ const JWTAuthorizer = ( req, res, next ) => {
         req.headers.authorization.split(' ')[1]
     ).then(
         (result) => {
-            if (result['cognito:groups'] == null){
+            if (!result){
                 res.locals.authorized = false
             } 
             else {
-                const authorized = conf.AUTHORIZED_ADMINS.some(r=> result['cognito:groups'].indexOf(r) >= 0)
+                const authorized = conf.AUTHORIZED_ADMINS.some(r=> result.indexOf(r) >= 0)
                 res.locals.authorized = authorized
             }
             next()

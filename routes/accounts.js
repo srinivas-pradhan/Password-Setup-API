@@ -12,12 +12,12 @@ const {
 const JwtVerify = require('../middleware/verifyToken')
 const JwtAuthorize = require('../middleware/verifyAuthorization')
 
-router.route('/').post(JwtVerify, JwtAuthorize, SetupAccount).get(JwtVerify, GetAllAccounts)
+router.route('/').post(JwtVerify, JwtAuthorize, SetupAccount).get(JwtVerify, JwtAuthorize, GetAllAccounts)
 
 router
   .route('/:id')
-  .get(JwtVerify, GetOneAccountByNumber)
-  .delete(JwtVerify, DeleteAccount)
-  .patch(JwtVerify, UpdateAccount)
+  .get(JwtVerify, JwtAuthorize, GetOneAccountByNumber)
+  .delete(JwtVerify, JwtAuthorize, DeleteAccount)
+  .patch(JwtVerify, JwtAuthorize, UpdateAccount)
 
 module.exports = router

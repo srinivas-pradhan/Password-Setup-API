@@ -29,12 +29,12 @@ const SetupAccount  = async ( req, res ) => {
             }
         }
     } else {
-        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token' })
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token &/or Check Authorization' })
     }
 }
 
 const UpdateAccount  = async ( req, res ) => {
-    if (res.locals.authenticated) {
+    if (res.locals.authenticated && res.locals.authorized) {
         try {
             const { id: AccountID } = req.params
             if (req.body.SupportedRegions){
@@ -71,12 +71,12 @@ const UpdateAccount  = async ( req, res ) => {
         }
 
     } else {
-        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token' })
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token &/or Check Authorization' })
     }
 }
 
 const DeleteAccount  = async ( req, res ) => {
-    if (res.locals.authenticated) {
+    if (res.locals.authenticated && res.locals.authorized) {
         try {
             const { id: AccountID } = req.params
             const Acc = await AccountStore.findOneAndDelete({ AccountNumber: AccountID }) 
@@ -100,12 +100,12 @@ const DeleteAccount  = async ( req, res ) => {
         }
     }
     else {
-        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token'})
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token &/or Check Authorization'})
     }
 }
 
 const GetAllAccounts  = async ( req, res ) => {
-    if (res.locals.authenticated) {
+    if (res.locals.authenticated && res.locals.authorized) {
         const Acc = await AccountStore.find({})
         var result = []
         for (let i=0; i < Acc.length; i++){
@@ -119,12 +119,12 @@ const GetAllAccounts  = async ( req, res ) => {
         res.status(StatusCodes.OK).json(result)
 
     } else {
-        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token'})
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token &/or Check Authorization'})
     }
 }
 
 const GetOneAccountByNumber  = async ( req, res ) => {
-    if (res.locals.authenticated) {
+    if (res.locals.authenticated && res.locals.authorized) {
         try {
             const { id: AccountID } = req.params
             const Acc = await AccountStore.findOne({ AccountNumber: AccountID })
@@ -151,7 +151,7 @@ const GetOneAccountByNumber  = async ( req, res ) => {
             }
         }   
     } else {
-        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token'})
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token &/or Check Authorization'})
     }
 }
 module.exports = {

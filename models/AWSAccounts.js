@@ -24,7 +24,7 @@ const AWSAccountSchema = new mongoose.Schema(
         },
         KMSKey: {
             type: String,
-            default: "NO_KMS_KEY"
+            default: null
 
         },
         Created_by: {
@@ -35,7 +35,7 @@ const AWSAccountSchema = new mongoose.Schema(
         },
         IAMRole: {
             type: String,
-            default: "NO_IAM_ROLE"
+            default: null
         }
 })
 

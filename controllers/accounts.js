@@ -11,8 +11,8 @@ const SetupAccount  = async ( req, res ) => {
                 "SupportedRegions": Acc.SupportedRegions,
                 "AccountNumber": Acc.AccountNumber,
                 "KMSKey": Acc.KMSKey,
-                "Created_by": Acc.Created_by,
-                "IAMRole": Acc.IAMRole
+                "IAMRole": Acc.IAMRole,
+                "Created_by": Acc.Created_by
             })
         } catch (error) {
             if (error.name === "MongoError") {
@@ -55,8 +55,8 @@ const UpdateAccount  = async ( req, res ) => {
                     "SupportedRegions": Acc.SupportedRegions,
                     "AccountNumber": Acc.AccountNumber,
                     "KMSKey": Acc.KMSKey,
-                    "Created_by": Acc.Created_by,
-                    "IAMRole": Acc.IAMRole
+                    "IAMRole": Acc.IAMRole,
+                    "Created_by": Acc.Created_by
                 }) 
             }
             else {
@@ -119,8 +119,8 @@ const GetAllAccounts  = async ( req, res ) => {
                 "SupportedRegions": Acc[i].SupportedRegions,
                 "AccountNumber": Acc[i].AccountNumber,
                 "KMSKey": Acc[i].KMSKey,
-                "Created_by": Acc[i].Created_by,
-                "IAMRole": Acc[i].IAMRole
+                "IAMRole": Acc[i].IAMRole,
+                "Created_by": Acc[i].Created_by
             })
         }
         res.status(StatusCodes.OK).json(result)
@@ -141,8 +141,8 @@ const GetOneAccountByNumber  = async ( req, res ) => {
                     "SupportedRegions": Acc.SupportedRegions,
                     "AccountNumber": Acc.AccountNumber,
                     "KMSKey": Acc.KMSKey,
-                    "Created_by": Acc.Created_by,
-                    "IAMRole": Acc.IAMRole
+                    "IAMRole": Acc.IAMRole,
+                    "Created_by": Acc.Created_by
                 })
             } else {
                 res.status(StatusCodes.NO_CONTENT).send()

@@ -4,12 +4,15 @@ const AccountStore = require('../models/AWSAccounts')
 const SetupAccount  = async ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {
+            req.body.Created_by = res.locals.email
             const Acc = await AccountStore.create(req.body)
             res.status(StatusCodes.CREATED).json({
                 "AccountType": Acc.AccountType,
                 "SupportedRegions": Acc.SupportedRegions,
                 "AccountNumber": Acc.AccountNumber,
-                "KMSKey": Acc.KMSKey
+                "KMSKey": Acc.KMSKey,
+                "Created_by": Acc.Created_by,
+                "IAMRole": Acc.IAMRole
             })
         } catch (error) {
             if (error.name === "MongoError") {
@@ -51,7 +54,9 @@ const UpdateAccount  = async ( req, res ) => {
                     "AccountType": Acc.AccountType,
                     "SupportedRegions": Acc.SupportedRegions,
                     "AccountNumber": Acc.AccountNumber,
-                    "KMSKey": Acc.KMSKey
+                    "KMSKey": Acc.KMSKey,
+                    "Created_by": Acc.Created_by,
+                    "IAMRole": Acc.IAMRole
                 }) 
             }
             else {
@@ -113,7 +118,9 @@ const GetAllAccounts  = async ( req, res ) => {
                 "AccountType": Acc[i].AccountType,
                 "SupportedRegions": Acc[i].SupportedRegions,
                 "AccountNumber": Acc[i].AccountNumber,
-                "KMSKey": Acc[i].KMSKey
+                "KMSKey": Acc[i].KMSKey,
+                "Created_by": Acc[i].Created_by,
+                "IAMRole": Acc[i].IAMRole
             })
         }
         res.status(StatusCodes.OK).json(result)
@@ -133,7 +140,9 @@ const GetOneAccountByNumber  = async ( req, res ) => {
                     "AccountType": Acc.AccountType,
                     "SupportedRegions": Acc.SupportedRegions,
                     "AccountNumber": Acc.AccountNumber,
-                    "KMSKey": Acc.KMSKey
+                    "KMSKey": Acc.KMSKey,
+                    "Created_by": Acc.Created_by,
+                    "IAMRole": Acc.IAMRole
                 })
             } else {
                 res.status(StatusCodes.NO_CONTENT).send()

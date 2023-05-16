@@ -10,12 +10,18 @@ const TokenValidity = ( req, res, next ) => {
         req.headers.authorization.split(' ')[1]
     ).then(
         (result) => {
+            console.log(result.UserAttributes.length)
             if (!result){
                 res.locals.authenticated = false
             } 
             else {
                 res.locals.authenticated = true
-                res.locals.uname = result.Username
+                for (let i = 0; i < result.UserAttributes.length; i++) {
+                    if (result.UserAttributes[i].Name === 'email') {
+                        res.locals.email = result.UserAttributes[i].Value                        
+                    }
+                }
+
             }
             next()
         }

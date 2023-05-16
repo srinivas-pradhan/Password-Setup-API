@@ -10,7 +10,6 @@ const TokenValidity = ( req, res, next ) => {
         req.headers.authorization.split(' ')[1]
     ).then(
         (result) => {
-            console.log(result.UserAttributes.length)
             if (!result){
                 res.locals.authenticated = false
             } 

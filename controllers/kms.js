@@ -2,6 +2,7 @@ const { StatusCodes } = require('http-status-codes')
 const AssumeRole = require('../utils/assume_role')
 const AccountStore = require('../models/AWSAccounts')
 const CreateKMS = require('../utils/create_kms')
+const ShareKey = require('../utils/kms_share_key_regionally')
 
 
 const CreateMRKey  = async ( req, res ) => {
@@ -38,14 +39,27 @@ const CreateMRKey  = async ( req, res ) => {
     }
 }
 
-const ShareMRKeyByAccountNumber = ( req, res ) => {
+const ShareMRKeyByAccountNumber = async ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {
-            console.log("Hello")
+            let regionalKeys = new Map()
+            const { id: AccountID } = req.params
+            const Acc = await AccountStore.findOne({ AccountNumber: AccountID })
+            if (Acc.IAMRole && Acc.KMSKey){
+                // TODO ONCE NEW KEY IS CREATED USE HERE
+                // const STSession = await AssumeRole(Acc.IAMRole)
+                for (let i=0; i < Acc.SupportedRegions.length; i++){
+                    // const RegionalKey = await ShareKey({
+                    //     accessKeyId: STSession.Credentials.AccessKeyId,
+                    //     secretAccessKey: STSession.Credentials.SecretAccessKey,
+                    //     sessionToken: STSession.Credentials.SessionToken
+                    // }, Acc.KMSKey, Acc.SupportedRegions[i])
+                    // regionalKeys.set(Acc.SupportedRegions[i], 'REGIONAL KEY HERE')
+                }
+            }
         } catch (error) {
-            console.log("Hello Error")
+            console.log(error)
         }
-
     } else {
         console.log("Hello Error 1")
     }

@@ -9,7 +9,7 @@ const CreateMRKey  = async ( req, res ) => {
         try {
             const Acc = await AccountStore.findOne({ AccountNumber: req.body.AccountNumber })
             if (Acc.IAMRole && ! Acc.KMSKey){
-                let STSession = await AssumeRole(Acc.IAMRole)
+                const STSession = await AssumeRole(Acc.IAMRole)
                 const KeyCreate = await CreateKMS({
                     accessKeyId: STSession.Credentials.AccessKeyId,
                     secretAccessKey: STSession.Credentials.SecretAccessKey,

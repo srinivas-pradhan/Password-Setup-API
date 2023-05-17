@@ -58,7 +58,7 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
                 }
             }
         } catch (error) {
-            console.log(error)
+            res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization'})
         }
     } else {
         console.log("Hello Error 1")

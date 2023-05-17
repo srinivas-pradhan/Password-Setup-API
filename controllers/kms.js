@@ -38,7 +38,7 @@ const CreateMRKey  = async ( req, res ) => {
         res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization'})
     }
 }
-// Add different route than this -> /api/v1/kms/region_id/account_id (POST not PATCH) 
+// Add one more route -> /api/v1/kms/region_id/account_id (POST not PATCH) 
 const ShareMRKeyByAccountNumber = async ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {

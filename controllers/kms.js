@@ -38,7 +38,7 @@ const CreateMRKey  = async ( req, res ) => {
     }
 }
 
-const UpdateMRKey = ( req, res ) => {
+const ShareMRKeyByAccountNumber = ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {
             console.log("Hello")
@@ -52,35 +52,21 @@ const UpdateMRKey = ( req, res ) => {
     res.status(StatusCodes.OK).json({ msg: req.params })
 }
 
-const DeleteMRKey = ( req, res ) => {
-    if (res.locals.authenticated && res.locals.authorized) {
-        try {
-            console.log("Hello")
-        } catch (error) {
-            console.log("Hello Error")
-        }
+// const DeleteMRKey = ( req, res ) => {
+//     if (res.locals.authenticated && res.locals.authorized) {
+//         try {
+//             console.log("Hello")
+//         } catch (error) {
+//             console.log("Hello Error")
+//         }
 
-    } else {
-        console.log("Hello Error 1")
-    }
-    res.status(StatusCodes.OK).json({ msg: req.params })
-}
+//     } else {
+//         console.log("Hello Error 1")
+//     }
+//     res.status(StatusCodes.OK).json({ msg: req.params })
+// }
 
-const GetMRKey = ( req, res ) => {
-    if (res.locals.authenticated && res.locals.authorized) {
-        try {
-            console.log("Hello")
-        } catch (error) {
-            console.log("Hello Error")
-        }
-
-    } else {
-        console.log("Hello Error 1")
-    }
-    res.status(StatusCodes.OK).json({ msg: req.body })
-}
-
-const GetRegionalKey = ( req, res ) => {
+const GetMRKeyByAccountNumber = ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {
             console.log("Hello")
@@ -96,8 +82,6 @@ const GetRegionalKey = ( req, res ) => {
 
 module.exports = {
     CreateMRKey,
-    UpdateMRKey,
-    DeleteMRKey,
-    GetMRKey,
-    GetRegionalKey
+    ShareMRKeyByAccountNumber,
+    GetMRKeyByAccountNumber
   }

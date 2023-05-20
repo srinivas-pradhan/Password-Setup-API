@@ -15,6 +15,6 @@ router.route('/').post(JwtVerify, JwtAuthorize, CreateMRKey)
 router
   .route('/:id')
   .get(JwtVerify, JwtAuthorize, GetMRKeyByAccountNumber)
-  .patch(JwtVerify, JwtAuthorize, ShareMRKeyByAccountNumber)
+  .post(JwtVerify, JwtAuthorize, ShareMRKeyByAccountNumber)
 
 module.exports = router

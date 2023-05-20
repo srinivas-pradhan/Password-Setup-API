@@ -3,6 +3,7 @@ const AssumeRole = require('../utils/assume_role')
 const AccountStore = require('../models/AWSAccounts')
 const CreateKMS = require('../utils/create_kms')
 const ShareKey = require('../utils/kms_share_key_regionally')
+const GetKeyDetails = require('../utils/kms_get_mr_key')
 
 
 const CreateMRKey  = async ( req, res ) => {
@@ -44,26 +45,59 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
         try {
             let regionalKeys = new Map()
             const { id: AccountID } = req.params
-            const Acc = await AccountStore.findOne({ AccountNumber: AccountID })
+                const Acc = await AccountStore.findOne({ AccountNumber: AccountID })
+                console.log(typeof JSON.stringify(Acc))
             if (Acc.IAMRole && Acc.KMSKey){
-                // TODO ONCE NEW KEY IS CREATED USE HERE
-                // const STSession = await AssumeRole(Acc.IAMRole)
-                for (let i=0; i < Acc.SupportedRegions.length; i++){
-                    // const RegionalKey = await ShareKey({
-                    //     accessKeyId: STSession.Credentials.AccessKeyId,
-                    //     secretAccessKey: STSession.Credentials.SecretAccessKey,
-                    //     sessionToken: STSession.Credentials.SessionToken
-                    // }, Acc.KMSKey, Acc.SupportedRegions[i])
-                    // regionalKeys.set(Acc.SupportedRegions[i], 'REGIONAL KEY HERE')
+                const STSession = await AssumeRole(Acc.IAMRole)
+                MRKey = await GetKeyDetails({
+                    accessKeyId: STSession.Credentials.AccessKeyId,
+                    secretAccessKey: STSession.Credentials.SecretAccessKey,
+                    sessionToken: STSession.Credentials.SessionToken
+                }, Acc.KMSKey)
+                const repKeys = MRKey.KeyMetadata.MultiRegionConfiguration.ReplicaKeys
+                for (let i=0; i < repKeys.length; i++){
+                    Acc.SupportedRegions = Acc.SupportedRegions.filter(e => e !== repKeys[i].Region)
+                }
+                if (MRKey.KeyMetadata.Enabled) {
+                    regionalKeys.set(MRKey.KeyMetadata.Arn.split(':')[3], {
+                        "RegionAvailability": true,
+                        "Reason": "PRIMARY"
+                    })
+                    Acc.SupportedRegions = Acc.SupportedRegions.filter(e => e !== MRKey.KeyMetadata.Arn.split(':')[3])
+                    if (Acc.SupportedRegions.length === 0) {
+                        res.status(StatusCodes.CONFLICT).json({ 
+                            error: 'KEYSHARE_CONFIGURATION_INVALID',
+                            message: 'Multi region Key is already available in all onboarded regions'
+                        })  
+                    }
+                    else {
+                        for (let i=0; i < Acc.SupportedRegions.length; i++){
+                            const RegionalKey = await ShareKey({
+                                accessKeyId: STSession.Credentials.AccessKeyId,
+                                secretAccessKey: STSession.Credentials.SecretAccessKey,
+                                sessionToken: STSession.Credentials.SessionToken
+                            }, Acc.KMSKey, Acc.SupportedRegions[i])
+                            regionalKeys.set(Acc.SupportedRegions[i], {
+                                "RegionAvailability": true,
+                                "Reason": "REPLICA_CREATED"
+                            })
+                        }
+                        res.status(StatusCodes.OK).json([...regionalKeys])
+                    }   
+                }
+                else {
+                    res.status(StatusCodes.CONFLICT).json({ 
+                        error: 'KEYSHARE_CONFIGURATION_INVALID',
+                        message: 'Multi region Key is Invalid. Multi region Key is already shared to all onboarded regions'
+                    })  
                 }
             }
         } catch (error) {
-            res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization'})
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
         }
     } else {
-        console.log("Hello Error 1")
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization'})
     }
-    res.status(StatusCodes.OK).json({ msg: req.params })
 }
 
 // const DeleteMRKey = ( req, res ) => {

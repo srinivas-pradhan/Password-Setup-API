@@ -56,6 +56,10 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
                 const repKeys = MRKey.KeyMetadata.MultiRegionConfiguration.ReplicaKeys
                 for (let i=0; i < repKeys.length; i++){
                     Acc.SupportedRegions = Acc.SupportedRegions.filter(e => e !== repKeys[i].Region)
+                    regionalKeys.set(repKeys[i].Region, {
+                        "RegionAvailability": true,
+                        "Reason": "REPLICA_EXISTS"
+                    })
                 }
                 if (MRKey.KeyMetadata.Enabled) {
                     regionalKeys.set(MRKey.KeyMetadata.Arn.split(':')[3], {

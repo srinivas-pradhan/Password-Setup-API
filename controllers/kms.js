@@ -100,20 +100,6 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
     }
 }
 
-// const DeleteMRKey = ( req, res ) => {
-//     if (res.locals.authenticated && res.locals.authorized) {
-//         try {
-//             console.log("Hello")
-//         } catch (error) {
-//             console.log("Hello Error")
-//         }
-
-//     } else {
-//         console.log("Hello Error 1")
-//     }
-//     res.status(StatusCodes.OK).json({ msg: req.params })
-// }
-
 const GetMRKeyByAccountNumber = ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {

@@ -120,7 +120,6 @@ const GetMRKeyByAccountNumber = async ( req, res ) => {
                     "PrimaryKeyRegion": MRKey.KeyMetadata.MultiRegionConfiguration.PrimaryKey.Region,
                     "ReplicaKeysRegions": ReplicaKeyRegions
                 })
-                //res.status(StatusCodes.OK).json({ msg: MRKey.KeyMetadata.MultiRegionConfiguration })
             }
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })

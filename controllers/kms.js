@@ -69,7 +69,9 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
                     if (Acc.SupportedRegions.length === 0) {
                         res.status(StatusCodes.CONFLICT).json({ 
                             error: 'KEYSHARE_CONFIGURATION_INVALID',
-                            message: 'Multi region Key is already available in all onboarded regions'
+                            message: 'Multi region Key is already available in all onboarded regions',
+                            RegionalKeys: [].concat(...regionalKeys)
+
                         })  
                     }
                     else {
@@ -84,7 +86,7 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
                                 "Reason": "REPLICA_CREATED"
                             })
                         }
-                        res.status(StatusCodes.OK).json([...regionalKeys])
+                        res.status(StatusCodes.OK).json([].concat(...regionalKeys))
                     }   
                 }
                 else {

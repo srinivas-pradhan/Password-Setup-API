@@ -79,7 +79,7 @@ const UpdateAccount  = async ( req, res ) => {
         res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization' })
     }
 }
-
+// Add calls to Schedule KMS Key Deletion
 const DeleteAccount  = async ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {

@@ -46,7 +46,6 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
             let regionalKeys = new Map()
             const { id: AccountID } = req.params
                 const Acc = await AccountStore.findOne({ AccountNumber: AccountID })
-                console.log(typeof JSON.stringify(Acc))
             if (Acc.IAMRole && Acc.KMSKey){
                 const STSession = await AssumeRole(Acc.IAMRole)
                 MRKey = await GetKeyDetails({
@@ -88,7 +87,7 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
                 else {
                     res.status(StatusCodes.CONFLICT).json({ 
                         error: 'KEYSHARE_CONFIGURATION_INVALID',
-                        message: 'Multi region Key is Invalid. Multi region Key is already shared to all onboarded regions'
+                        message: 'Multi region Key is Invalid.'
                     })  
                 }
             }
@@ -100,18 +99,36 @@ const ShareMRKeyByAccountNumber = async ( req, res ) => {
     }
 }
 
-const GetMRKeyByAccountNumber = ( req, res ) => {
+const GetMRKeyByAccountNumber = async ( req, res ) => {
     if (res.locals.authenticated && res.locals.authorized) {
         try {
-            console.log("Hello")
+            const { id: AccountID } = req.params
+            const Acc = await AccountStore.findOne({ AccountNumber: AccountID })
+            if (Acc.IAMRole && Acc.KMSKey){
+                const STSession = await AssumeRole(Acc.IAMRole)
+                MRKey = await GetKeyDetails({
+                    accessKeyId: STSession.Credentials.AccessKeyId,
+                    secretAccessKey: STSession.Credentials.SecretAccessKey,
+                    sessionToken: STSession.Credentials.SessionToken
+                }, Acc.KMSKey)
+                let ReplicaKeyRegions = []
+                for (let i=0; i < MRKey.KeyMetadata.MultiRegionConfiguration.ReplicaKeys.length; i++) {  
+                    ReplicaKeyRegions.push(MRKey.KeyMetadata.MultiRegionConfiguration.ReplicaKeys[i].Region)
+                }
+                res.status(StatusCodes.OK).json({
+                    "KeyId": MRKey.KeyMetadata.KeyId,
+                    "PrimaryKeyRegion": MRKey.KeyMetadata.MultiRegionConfiguration.PrimaryKey.Region,
+                    "ReplicaKeysRegions": ReplicaKeyRegions
+                })
+                //res.status(StatusCodes.OK).json({ msg: MRKey.KeyMetadata.MultiRegionConfiguration })
+            }
         } catch (error) {
-            console.log("Hello Error")
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
         }
 
     } else {
-        console.log("Hello Error 1")
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization'})
     }
-    res.status(StatusCodes.OK).json({ msg: req.params })
 }
 
 module.exports = {

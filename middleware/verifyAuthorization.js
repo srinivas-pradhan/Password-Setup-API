@@ -13,6 +13,8 @@ const JWTAuthorizer = ( req, res, next ) => {
             else {
                 const authorized = conf.AUTHORIZED_ADMINS.some(r=> result.indexOf(r) >= 0)
                 res.locals.authorized = authorized
+                const auth_user = conf.AUTHORIZED_USERS.some(r=> result.indexOf(r) >= 0)
+                res.locals.auth_user = auth_user
             }
             next()
         }

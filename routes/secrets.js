@@ -9,12 +9,15 @@ const {
     GetOneSecret
 } = require('../controllers/secrets')
 
-router.route('/').post(CreateSecret).get(GetSecrets)
+const JwtVerify = require('../middleware/verifyToken')
+const JwtAuthorize = require('../middleware/verifyAuthorization')
+
+router.route('/').post(JwtVerify, JwtAuthorize, CreateSecret).get(JwtVerify, JwtAuthorize, GetSecrets)
 
 router
   .route('/:id')
-  .get(GetOneSecret)
-  .delete(DeleteSecret)
-  .patch(UpdateSecret)
+  .get(JwtVerify, JwtAuthorize, GetOneSecret)
+  .delete(JwtVerify, JwtAuthorize, DeleteSecret)
+  .patch(JwtVerify, JwtAuthorize, UpdateSecret)
 
 module.exports = router

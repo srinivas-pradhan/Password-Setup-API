@@ -3,14 +3,7 @@ const morgan = require('morgan');
 const app = express()
 const MongoDB = require('./db/mongo')
 
-const {
-    PORT,
-    MONGO_URI,
-    COGNITO_APP_CLIENT,
-    COGNITO_USER_POOL,
-    LOG_LEVEL,
-    AUTHORIZED_ADMINS
-} = require('./config')
+const { MONGO_URI, PORT, LOG_LEVEL } = require('./config')
 const accountRouter = require('./routes/accounts')
 const kmsRouter = require('./routes/kms')
 const secretsRouter = require('./routes/secrets')

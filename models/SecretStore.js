@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 
 const SecretSchema = new mongoose.Schema(
     {
-      secretName: {
+      SecretName: {
         type: String,
         required: [true, 'Please provide a secret name'],
         maxlength: 50,
       },
-      SecretString: {
+      SecretArn: {
         type: String,
-        required: [true, 'Please provide a secret to upload to Secrets Manager'],
+        default: null,
         maxlength: 100,
       },
       AccountNumber: {
@@ -39,5 +39,7 @@ const SecretSchema = new mongoose.Schema(
     { timestamps: true }
   )
   
+  SecretSchema.index({ AccountNumber: 1, Region: 1, SecretName: 1 }, { unique: true })
+
   module.exports = mongoose.model('SecretStore', SecretSchema)
   

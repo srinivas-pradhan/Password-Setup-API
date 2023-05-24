@@ -15,6 +15,12 @@ const JWTAuthorizer = ( req, res, next ) => {
                 res.locals.authorized = authorized
                 const auth_user = conf.AUTHORIZED_USERS.some(r=> result.indexOf(r) >= 0)
                 res.locals.auth_user = auth_user
+                if (result.includes(req.body.Cognito_group)) {
+                    res.locals.valid_group = true
+                }
+                else {
+                    res.locals.valid_group = false
+                }
             }
             next()
         }

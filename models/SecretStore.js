@@ -33,7 +33,8 @@ const SecretSchema = new mongoose.Schema(
         ]        
       },
       Cognito_group: {
-        type: String
+        type: String,
+        required: [true, 'Cognito Secret Owner group must be provided']
       }
     },
     { timestamps: true }

@@ -3,7 +3,7 @@ const AccountStore = require('../models/AWSAccounts')
 const SecretsStore = require('../models/SecretStore')
 const GetKeyDetails = require('../utils/kms_get_mr_key')
 const AssumeRole = require('../utils/assume_role')
-const CreateSecret = require('../utils/create_secret')
+const Secret = require('../utils/create_secret')
 
 
 const CreateSecret  = async ( req, res ) => {
@@ -38,7 +38,7 @@ const CreateSecret  = async ( req, res ) => {
                 return
             }
             // Fix tags
-            Secret = CreateSecret({
+            SMSecre = await Secret({
                 accessKeyId: STSession.Credentials.AccessKeyId,
                 secretAccessKey: STSession.Credentials.SecretAccessKey,
                 sessionToken: STSession.Credentials.SessionToken

@@ -9,10 +9,18 @@ const SecretSchema = new mongoose.Schema(
       },
       SecretString: {
         type: String,
-        default: null,
+        required: true,
         maxlength: 100,
       },
-      Desc: {
+      SecretArn: {
+        type: String,
+        default: null,
+        unique: true,
+        index: true,
+        maxlength: 100,
+      },
+      Desc: 
+      {
         type: String,
         required: [true, 'Secret Description must be provided']
       },

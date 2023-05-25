@@ -41,6 +41,7 @@ const CreateSecret  = async ( req, res ) => {
                 secretAccessKey: STSession.Credentials.SecretAccessKey,
                 sessionToken: STSession.Credentials.SessionToken
             },  req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc, req.body.AWSTags)
+            console.log(SMSecret)
             res.status(StatusCodes.CREATED).json({ msg: req.body })
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
@@ -64,7 +65,7 @@ const GetSecrets = ( req, res ) => {
     console.log(res.locals.auth_user)
     res.status(StatusCodes.OK).json({ msg: req.body })
 }
-
+// Use Index here and change the route pattern
 const GetOneSecret = ( req, res ) => {
     res.status(StatusCodes.OK).json({ msg: req.body })
 }

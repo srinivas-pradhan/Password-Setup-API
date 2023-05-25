@@ -39,6 +39,10 @@ const SecretSchema = new mongoose.Schema(
       Cognito_group: {
         type: String,
         required: [true, 'Cognito Secret Owner group must be provided']
+      },
+      AWSTags:{
+        type: [Map],
+        required: [true, 'AWS Tags for Secrets Manager Secret.']
       }
     },
     { timestamps: true }

@@ -10,7 +10,6 @@ const CreateSecret  = async ( req, res ) => {
     if (res.locals.authenticated && (res.locals.authorized || res.locals.auth_user)) {
         try {
             const Acc = await AccountStore.findOne({ AccountNumber: req.body.AccountNumber })
-            console.log(Acc)
             if (!res.locals.valid_group) {
                 res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `The user is not authorized to upload secrets to ${req.body.Cognito_group} group.` })
                 return
@@ -37,12 +36,11 @@ const CreateSecret  = async ( req, res ) => {
                 res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `KMSKey for ${req.body.AccountNumber} is DISABLED.` })
                 return
             }
-            // Fix tags
-            SMSecre = await Secret({
+            SMSecret = await Secret({
                 accessKeyId: STSession.Credentials.AccessKeyId,
                 secretAccessKey: STSession.Credentials.SecretAccessKey,
                 sessionToken: STSession.Credentials.SessionToken
-            },  req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc)
+            },  req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc, req.body.AWSTags)
             res.status(StatusCodes.CREATED).json({ msg: req.body })
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })

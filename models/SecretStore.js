@@ -7,10 +7,14 @@ const SecretSchema = new mongoose.Schema(
         required: [true, 'Please provide a secret name'],
         maxlength: 50,
       },
-      SecretArn: {
+      SecretString: {
         type: String,
         default: null,
         maxlength: 100,
+      },
+      Desc: {
+        type: String,
+        required: [true, 'Secret Description must be provided']
       },
       AccountNumber: {
         type: Number,

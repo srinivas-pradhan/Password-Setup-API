@@ -7,11 +7,6 @@ const SecretSchema = new mongoose.Schema(
         required: [true, 'Please provide a secret name'],
         maxlength: 50,
       },
-      SecretString: {
-        type: String,
-        required: true,
-        maxlength: 100,
-      },
       SecretArn: {
         type: String,
         default: null,
@@ -27,7 +22,6 @@ const SecretSchema = new mongoose.Schema(
       AccountNumber: {
         type: Number,
         required: [true, 'AWS Account Number must be provided.'],
-        unique: true,
         validate: {
             validator: function(v) {
               return /^([0-9]{12}$)/.test(v);
@@ -47,10 +41,6 @@ const SecretSchema = new mongoose.Schema(
       Cognito_group: {
         type: String,
         required: [true, 'Cognito Secret Owner group must be provided']
-      },
-      AWSTags:{
-        type: [Map],
-        required: [true, 'AWS Tags for Secrets Manager Secret.']
       }
     },
     { timestamps: true }

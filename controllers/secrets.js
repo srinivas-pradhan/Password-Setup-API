@@ -40,9 +40,13 @@ const CreateSecret  = async ( req, res ) => {
                 accessKeyId: STSession.Credentials.AccessKeyId,
                 secretAccessKey: STSession.Credentials.SecretAccessKey,
                 sessionToken: STSession.Credentials.SessionToken
-            },  req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc, req.body.AWSTags)
-            console.log(SMSecret)
-            res.status(StatusCodes.CREATED).json({ msg: req.body })
+            },req.body.Region, req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc)
+            req.body.SecretArn = SMSecret.ARN
+            const DBSecret = await SecretsStore.create(req.body)
+            res.status(StatusCodes.CREATED).json({ 
+                SecretName: DBSecret.SecretName,
+                SecretArn: DBSecret.SecretArn
+             })
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
         }

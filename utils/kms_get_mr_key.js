@@ -9,7 +9,7 @@ const get_kms_key_details = async (creds, key_id) => {
         response = await client.send(command)
         return response
     } catch (error) {
-        console.log(error)
+        return error
     }
 }
 

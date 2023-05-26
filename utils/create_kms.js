@@ -15,7 +15,7 @@ const create_kms_key = async (creds) => {
         response = await client.send(command)
         return response
     } catch (error) {
-        console.log(error)
+        return error
     }
 }
 

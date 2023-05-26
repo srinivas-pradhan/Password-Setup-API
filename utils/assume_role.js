@@ -11,7 +11,7 @@ const assume_role = async ( role_arn, role_session_name = "Password-Setup-API") 
         response = await client.send(command)
         return response
     } catch (error) {
-        console.log(error)
+        return error
     }
 }
 

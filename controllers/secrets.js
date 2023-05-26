@@ -24,20 +24,25 @@ const CreateSecret  = async ( req, res ) => {
         if (!Acc.KMSKey) {
             res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup KMSKey for ${req.body.AccountNumber}.` })
             return
-        }try {
-            STSession = await AssumeRole(Acc.IAMRole)
-        } catch (error) {
-            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+        }
+        STSession = await AssumeRole(Acc.IAMRole)
+        if (typeof STSession.Credentials === 'undefined'){
+            res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: STSession.name,
+                message: STSession.message 
+            })
             return
         }
-        try {
-            MRKey = await GetKeyDetails({
-                accessKeyId: STSession.Credentials.AccessKeyId,
-                secretAccessKey: STSession.Credentials.SecretAccessKey,
-                sessionToken: STSession.Credentials.SessionToken
-            }, Acc.KMSKey)      
-        } catch (error) {
-            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+        MRKey = await GetKeyDetails({
+            accessKeyId: STSession.Credentials.AccessKeyId,
+            secretAccessKey: STSession.Credentials.SecretAccessKey,
+            sessionToken: STSession.Credentials.SessionToken
+        }, Acc.KMSKey)
+        if (typeof MRKey.KeyMetadata === 'undefined'){
+            res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: MRKey.name,
+                message: MRKey.message 
+            })
             return
         }
         if (!MRKey.KeyMetadata.Enabled) {
@@ -51,8 +56,8 @@ const CreateSecret  = async ( req, res ) => {
         },req.body.Region, req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc)
         if (typeof SMSecret.ARN === 'undefined'){
             res.status(StatusCodes.BAD_REQUEST).json({ 
-                error: SMSecret,
-                message: `${req.body.SecretName} not created in Secrets Manager.` 
+                error: SMSecret.name,
+                message: SMSecret.message 
             })
             return
         }

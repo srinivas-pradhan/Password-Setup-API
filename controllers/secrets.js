@@ -49,7 +49,6 @@ const CreateSecret  = async ( req, res ) => {
             secretAccessKey: STSession.Credentials.SecretAccessKey,
             sessionToken: STSession.Credentials.SessionToken
         },req.body.Region, req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc)
-        console.log(SMSecret)
         if (typeof SMSecret.ARN === 'undefined'){
             res.status(StatusCodes.BAD_REQUEST).json({ 
                 error: SMSecret,

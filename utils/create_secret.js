@@ -18,7 +18,7 @@ const create_secret = async (creds, region, name, kmsid, secret_string, desc) =>
         response = await client.send(command)
         return response
     } catch (error) {
-        console.log(error)
+        return error.name
     }
 }
 

@@ -8,45 +8,62 @@ const Secret = require('../utils/create_secret')
 
 const CreateSecret  = async ( req, res ) => {
     if (res.locals.authenticated && (res.locals.authorized || res.locals.auth_user)) {
+        Acc = await AccountStore.findOne({ AccountNumber: req.body.AccountNumber })
+        if (!res.locals.valid_group) {
+            res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `The user is not authorized to upload secrets to ${req.body.Cognito_group} group.` })
+            return
+        }
+        if (!Acc.SupportedRegions.includes(req.body.Region)) {
+            res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `${req.body.Region} is not supported in ${req.body.AccountNumber}` })
+            return
+        }
+        if (!Acc.IAMRole) {
+            res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup IAMRole for ${req.body.AccountNumber}.` })
+            return
+        }
+        if (!Acc.KMSKey) {
+            res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup KMSKey for ${req.body.AccountNumber}.` })
+            return
+        }try {
+            STSession = await AssumeRole(Acc.IAMRole)
+        } catch (error) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+            return
+        }
         try {
-            const Acc = await AccountStore.findOne({ AccountNumber: req.body.AccountNumber })
-            if (!res.locals.valid_group) {
-                res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `The user is not authorized to upload secrets to ${req.body.Cognito_group} group.` })
-                return
-            }
-            if (!Acc.SupportedRegions.includes(req.body.Region)) {
-                res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `${req.body.Region} is not supported in ${req.body.AccountNumber}` })
-                return
-            }
-            if (!Acc.IAMRole) {
-                res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup IAMRole for ${req.body.AccountNumber}.` })
-                return
-            }
-            if (!Acc.KMSKey) {
-                res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup KMSKey for ${req.body.AccountNumber}.` })
-                return
-            }
-            const STSession = await AssumeRole(Acc.IAMRole)
             MRKey = await GetKeyDetails({
                 accessKeyId: STSession.Credentials.AccessKeyId,
                 secretAccessKey: STSession.Credentials.SecretAccessKey,
                 sessionToken: STSession.Credentials.SessionToken
-            }, Acc.KMSKey)
-            if (!MRKey.KeyMetadata.Enabled) {
-                res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `KMSKey for ${req.body.AccountNumber} is DISABLED.` })
-                return
-            }
-            SMSecret = await Secret({
-                accessKeyId: STSession.Credentials.AccessKeyId,
-                secretAccessKey: STSession.Credentials.SecretAccessKey,
-                sessionToken: STSession.Credentials.SessionToken
-            },req.body.Region, req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc)
-            req.body.SecretArn = SMSecret.ARN
-            const DBSecret = await SecretsStore.create(req.body)
+            }, Acc.KMSKey)      
+        } catch (error) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+            return
+        }
+        if (!MRKey.KeyMetadata.Enabled) {
+            res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `KMSKey for ${req.body.AccountNumber} is DISABLED.` })
+            return
+        }
+        SMSecret = await Secret({
+            accessKeyId: STSession.Credentials.AccessKeyId,
+            secretAccessKey: STSession.Credentials.SecretAccessKey,
+            sessionToken: STSession.Credentials.SessionToken
+        },req.body.Region, req.body.SecretName, Acc.KMSKey, req.body.SecretString, req.body.Desc)
+        console.log(SMSecret)
+        if (typeof SMSecret.ARN === 'undefined'){
+            res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: SMSecret,
+                message: `${req.body.SecretName} not created in Secrets Manager.` 
+            })
+            return
+        }
+        req.body.SecretArn = SMSecret.ARN
+        try {
+            DBSecret = await SecretsStore.create(req.body)
             res.status(StatusCodes.CREATED).json({ 
                 SecretName: DBSecret.SecretName,
                 SecretArn: DBSecret.SecretArn
-             })
+            })
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
         }

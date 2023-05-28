@@ -21,6 +21,6 @@ router
   .route('/:Account/:Region/:SecretName')
   .get(JwtVerify, JwtAuthorize, GetCognitoGroups, GetOneSecret)
   .delete(JwtVerify, JwtAuthorize, DeleteSecret)
-  .patch(JwtVerify, JwtAuthorize, UpdateSecret)
+  .patch(JwtVerify, JwtAuthorize, GetCognitoGroups, UpdateSecret)
 
 module.exports = router

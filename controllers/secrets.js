@@ -103,7 +103,6 @@ const GetOneSecret = async ( req, res ) => {
                 res.status(StatusCodes.PRECONDITION_FAILED).json({ error: `Required permission to "${ThisSecret.Cognito_group}" Cognito Group - MISSING.` })
                 return
             }
-            console.log(res.locals.user_groups)
             res.status(StatusCodes.OK).json({ 
                 "SecretName": ThisSecret.SecretName,
                 "SecretArn": ThisSecret.SecretArn,

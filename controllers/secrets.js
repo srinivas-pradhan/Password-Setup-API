@@ -81,7 +81,7 @@ const UpdateSecret = ( req, res ) => {
     res.status(StatusCodes.OK).json({ msg: req.body })
 }
 
-const DeleteSecret = ( req, res ) => {
+const DeleteSecret = async ( req, res ) => {
     res.status(StatusCodes.OK).json({ msg: req.body })
 }
 

@@ -12,10 +12,12 @@ const {
 const JwtVerify = require('../middleware/verifyToken')
 const JwtAuthorize = require('../middleware/verifyAuthorization')
 
-router.route('/').post(JwtVerify, JwtAuthorize, CreateSecret).get(JwtVerify, JwtAuthorize, GetSecrets)
+router.route('/').post(JwtVerify, JwtAuthorize, CreateSecret)
+
+router.route('/:CognitoGroup').get(JwtVerify, JwtAuthorize, GetSecrets)
 
 router
-  .route('/:id')
+  .route('/:Account/:Region/:SecretName')
   .get(JwtVerify, JwtAuthorize, GetOneSecret)
   .delete(JwtVerify, JwtAuthorize, DeleteSecret)
   .patch(JwtVerify, JwtAuthorize, UpdateSecret)

@@ -40,6 +40,7 @@ const SecretSchema = new mongoose.Schema(
       },
       Cognito_group: {
         type: String,
+        index: true,
         required: [true, 'Cognito Secret Owner group must be provided']
       }
     },

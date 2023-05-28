@@ -91,9 +91,33 @@ const GetSecrets = ( req, res ) => {
     res.status(StatusCodes.OK).json({ msg: req.body })
 }
 // Use Index here and change the route pattern
-const GetOneSecret = ( req, res ) => {
-    res.status(StatusCodes.OK).json({ msg: req.body })
+const GetOneSecret = async ( req, res ) => {
+    if (res.locals.authenticated && (res.locals.authorized || res.locals.auth_user)) {
+        try {
+            ThisSecret = await SecretsStore.findOne({ 
+                AccountNumber: req.params.Account,
+                Region: req.params.Region,
+                SecretName: req.params.SecretName
+            })
+            if (!(res.locals.authorized || res.locals.user_groups.includes(ThisSecret.Cognito_group))) {
+                res.status(StatusCodes.PRECONDITION_FAILED).json({ error: `Required permission to "${ThisSecret.Cognito_group}" Cognito Group - MISSING.` })
+                return
+            }
+            console.log(res.locals.user_groups)
+            res.status(StatusCodes.OK).json({ 
+                "SecretName": ThisSecret.SecretName,
+                "SecretArn": ThisSecret.SecretArn,
+                "Cognito_group": ThisSecret.Cognito_group,
+                "Description": ThisSecret.Desc
+            })
+        } catch (error) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+        }
+    } else {
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization' })
+    }
 }
+
 
 module.exports = {
     CreateSecret,
@@ -101,4 +125,4 @@ module.exports = {
     DeleteSecret,
     GetSecrets,
     GetOneSecret
-  }
+}

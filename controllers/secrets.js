@@ -222,7 +222,7 @@ const DeleteSecret = async ( req, res ) => {
             sessionToken: STSession.Credentials.SessionToken
         },req.body.Region, req.params.SecretName, "7")
         console.log(DeleteThisSecret)
-        res.status(StatusCodes.NO_CONTENT)
+        res.status(StatusCodes.NO_CONTENT).send()
 
     }
     else {

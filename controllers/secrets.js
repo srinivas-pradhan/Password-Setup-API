@@ -5,6 +5,7 @@ const GetKeyDetails = require('../utils/kms_get_mr_key')
 const AssumeRole = require('../utils/assume_role')
 const Secret = require('../utils/create_secret')
 const UpdateOneSecret = require('../utils/update_secret')
+const DeleteOneSecret = require('../utils/delete_secret')
 
 
 const CreateSecret  = async ( req, res ) => {
@@ -172,7 +173,61 @@ const UpdateSecret = async ( req, res ) => {
 }
 
 const DeleteSecret = async ( req, res ) => {
-    res.status(StatusCodes.OK).json({ msg: req.body })
+    if (res.locals.authenticated && (res.locals.authorized || res.locals.auth_user)) {
+        try {
+            var ThisSecret = await SecretsStore.findOne({ 
+                AccountNumber: req.params.Account,
+                Region: req.params.Region,
+                SecretName: req.params.SecretName
+            })
+        } catch (error) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+        }
+        if (!ThisSecret) {
+            res.status(StatusCodes.NOT_FOUND).json({ error: `${req.params.SecretName} NOT FOUND.` })
+            return
+        }
+        if (!(res.locals.authorized || res.locals.user_groups.includes(ThisSecret.Cognito_group))) {
+            res.status(StatusCodes.PRECONDITION_FAILED).json({ error: `Required permission to "${ThisSecret.Cognito_group}" Cognito Group - MISSING.` })
+            return
+        }
+        try {
+            var Acc = await AccountStore.findOne({ AccountNumber: req.params.Account })
+        } catch (error) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+        }
+        if (!res.locals.valid_group) {
+            res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `The user is not authorized to delete secrets to ${req.body.Cognito_group} group.` })
+            return
+        }
+        if (!Acc.IAMRole) {
+            res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup IAMRole for ${req.body.AccountNumber}.` })
+            return
+        }
+        if (!Acc.KMSKey) {
+            res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup KMSKey for ${req.body.AccountNumber}.` })
+            return
+        }
+        STSession = await AssumeRole(Acc.IAMRole)
+        if (typeof STSession.Credentials === 'undefined'){
+            res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: STSession.name,
+                message: STSession.message 
+            })
+            return
+        }
+        DeleteThisSecret = await DeleteOneSecret({
+            accessKeyId: STSession.Credentials.AccessKeyId,
+            secretAccessKey: STSession.Credentials.SecretAccessKey,
+            sessionToken: STSession.Credentials.SessionToken
+        },req.body.Region, req.params.SecretName, "7")
+        console.log(DeleteThisSecret)
+        res.status(StatusCodes.NO_CONTENT)
+
+    }
+    else {
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization' })
+    }
 }
 
 const GetSecrets = ( req, res ) => {

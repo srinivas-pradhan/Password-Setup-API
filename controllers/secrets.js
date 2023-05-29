@@ -196,10 +196,6 @@ const DeleteSecret = async ( req, res ) => {
         } catch (error) {
             res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
         }
-        if (!res.locals.valid_group) {
-            res.status(StatusCodes.NOT_ACCEPTABLE).json({ error: `The user is not authorized to delete secrets to ${req.body.Cognito_group} group.` })
-            return
-        }
         if (!Acc.IAMRole) {
             res.status(StatusCodes.FAILED_DEPENDENCY).json({ error: `Please setup IAMRole for ${req.body.AccountNumber}.` })
             return
@@ -222,8 +218,12 @@ const DeleteSecret = async ( req, res ) => {
             sessionToken: STSession.Credentials.SessionToken
         },req.body.Region, req.params.SecretName, "7")
         console.log(DeleteThisSecret)
+        const DeleteSecret = await SecretsStore.findOneAndDelete({ 
+            AccountNumber: req.params.Account,
+            Region: req.params.Region,
+            SecretName: req.params.SecretName
+        }) 
         res.status(StatusCodes.NO_CONTENT).send()
-
     }
     else {
         res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization' })

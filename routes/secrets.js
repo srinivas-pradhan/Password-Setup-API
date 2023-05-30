@@ -15,7 +15,7 @@ const GetCognitoGroups = require('../middleware/GetCognitoGroups')
 
 router.route('/').post(JwtVerify, JwtAuthorize, CreateSecret)
 
-router.route('/:CognitoGroup').get(JwtVerify, JwtAuthorize, GetSecrets)
+router.route('/:CognitoGroup').get(JwtVerify, JwtAuthorize, GetCognitoGroups, GetSecrets)
 
 router
   .route('/:Account/:Region/:SecretName')

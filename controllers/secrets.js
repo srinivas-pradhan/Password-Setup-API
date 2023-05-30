@@ -230,12 +230,41 @@ const DeleteSecret = async ( req, res ) => {
     }
 }
 
-const GetSecrets = ( req, res ) => {
-    console.log(res.locals.authorized)
-    console.log(res.locals.auth_user)
-    res.status(StatusCodes.OK).json({ msg: req.body })
+const GetSecrets = async ( req, res ) => {
+    if (res.locals.authenticated && (res.locals.authorized || res.locals.auth_user)) {
+        try {
+            var SecretsGroupGet = await SecretsStore.find({ 
+                Cognito_group: req.params.CognitoGroup
+            }) 
+        } catch (error) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: error.name, message: error.message })
+        }
+        console.log(res.locals.user_groups)
+        if (!(res.locals.authorized || res.locals.user_groups.includes(req.params.CognitoGroup))) {
+            res.status(StatusCodes.PRECONDITION_FAILED).json({ error: `Required permission to "${req.params.CognitoGroup}" Cognito Group - MISSING.` })
+            return
+        }
+        var result = []
+        for (let i=0; i < SecretsGroupGet.length; i++){
+            result.push({
+                "SecretName":SecretsGroupGet[i].SecretName, 
+                "Desc": SecretsGroupGet[i].Desc,
+                "AccountNumber": SecretsGroupGet[i].AccountNumber,
+                "Region": SecretsGroupGet[i].Region,
+                "createdAt": SecretsGroupGet[i].createdAt,
+                "Cognito_group": SecretsGroupGet[i].Cognito_group,
+                "SecretArn": SecretsGroupGet[i].SecretArn,
+            })
+
+        }
+        res.status(StatusCodes.OK).json(result)
+
+    }
+    else {
+        res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Bearer Token and/or Check Authorization' })
+    }
+    console.log(GetSecrets)
 }
-// Use Index here and change the route pattern
 const GetOneSecret = async ( req, res ) => {
     if (res.locals.authenticated && (res.locals.authorized || res.locals.auth_user)) {
         try {

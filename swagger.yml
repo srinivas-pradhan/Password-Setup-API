@@ -1,0 +1,245 @@
+openapi: 3.0.0
+info:
+  title: Password-Setup-API
+  version: 1.0.0
+servers:
+  - url: http://{{url}}
+components:
+  securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
+    bearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /auth:
+    post:
+      tags:
+        - default
+      summary: Login User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: ''
+                password: ''
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /secrets/DEV:
+    get:
+      tags:
+        - default
+      summary: Get All Secrets
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /secrets:
+    post:
+      tags:
+        - default
+      summary: Create New Secret
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: SecretName
+                Cognito_group: DEV
+                SecretName: secret16
+                Desc: zhgjklml
+                SecretString: '{"username":"david","password":"EXAMPLE-PASSWORD"}'
+                AccountNumber: '703866956858'
+                Region: us-east-1
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /secrets/703866956858/us-east-2/secret15:
+    get:
+      tags:
+        - default
+      summary: Get One Secret
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - default
+      summary: Update A Secret
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                SecretString: '{"username":"pradhan","password":"EXAMPLE-PASSWORD"}'
+                Cognito_group: DEV
+                Desc: This is a real Secret.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /secrets/703866956858/us-east-1/secret16:
+    delete:
+      tags:
+        - default
+      summary: Delete A Secret
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /kms:
+    post:
+      tags:
+        - default
+      summary: Create New MR KMS Key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                AccountNumber: '703866956858'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /kms/703866956858:
+    get:
+      tags:
+        - default
+      summary: Get MR Key By Account Number
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - default
+      summary: Share MR Key to Onboarded Regions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: ''
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /accounts:
+    get:
+      tags:
+        - default
+      summary: Get All Accounts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - default
+      summary: Create A New Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                AccountNumber: '123456789123'
+                SupportedRegions:
+                  - us-east-1
+                IAMRole: ''
+                Created_by: me@example.com
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /accounts/111111111111:
+    get:
+      tags:
+        - default
+      summary: Get One Account By Account Number
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /accounts/703866956858:
+    patch:
+      tags:
+        - default
+      summary: Update An Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                SupportedRegions:
+                  - us-east-2
+                  - us-east-2
+                KMSKey: mrk-b169374ceffe4a9a88b60dc3dc3796c2
+                AccountType: prod
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /accounts/123456789123:
+    delete:
+      tags:
+        - default
+      summary: Delete An Account
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
